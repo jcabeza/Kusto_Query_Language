@@ -1,2 +1,4 @@
-# Azure_KQL_Queries
-Azure_KQL_Queries
+# Kusto Query Language (KQL)
+
+## KQL Quick Reference
+https://docs.microsoft.com/en-us/azure/data-explorer/kql-quick-reference
