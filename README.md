@@ -11,3 +11,7 @@ https://youtu.be/WBiMTLIJXMo
 
 ## KQL Cheat Sheet
 [kql_cheat_sheet.pdf](https://github.com/jcabeza/Kusto_Query_Language/files/6668139/kql_cheat_sheet.pdf)
+
+--------------------------------------------------------------------------------------------------------
+
+## KQL Queries
