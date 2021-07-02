@@ -8,6 +8,12 @@ Resources
 | where managedBy == "" or diskState == 'Unattached'
 | project id, diskState, resourceGroup, location, subscriptionId
 ```
+```
+Resources
+| where type =~ 'Microsoft.Compute/disks'
+| where properties.diskState =~ 'Unattached'
+| project-away tenantId, kind, managedBy, sku, plan, tags, identity, zones, extendedLocation, properties
+```
 
 ## Find Orphaned NICs
 ```
