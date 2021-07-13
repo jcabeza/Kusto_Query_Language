@@ -7,7 +7,7 @@ Resources
 | order by count_
 ```
 
-## Check and Count Resources Group Missing Tag
+## Query and Count Resources Group Missing Tag
 ```
 resourcecontainers
 | where type == "microsoft.resources/subscriptions/resourcegroups"
@@ -16,7 +16,7 @@ resourcecontainers
 | summarize count () by subscriptionId
 ```
 
-## Check All Resources Tags
+## Query All Resources Tags
 ```
 resourcecontainers
 | where type == "microsoft.resources/subscriptions/resourcegroups"
