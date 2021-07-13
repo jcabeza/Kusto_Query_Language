@@ -23,3 +23,13 @@ resourcecontainers
 | project  name,type,location,subscriptionId,tags
 | union (resources | project name,type,location,subscriptionId,tags)
 ```
+
+## Query Azure Policy Non Compliant
+```
+policyresources
+| where properties['policyDefinitionAction'] != "deny"
+| where properties['complianceState'] == "NonCompliant"
+| where properties['resourceGroup'] != ""
+| project properties['resourceId'], resourceGroup, properties['policyDefinitionName'], properties['policyDefinitionReferenceId'], properties['complianceState']
+| order by 'resourceId' asc
+```
