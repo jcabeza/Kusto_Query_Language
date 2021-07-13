@@ -29,3 +29,10 @@ Resources
 | where type == 'microsoft.compute/virtualmachines'
 | summarize count() by tostring(properties.extended.instanceView.powerState.code)
 ```
+
+## Count Virtual Machines by OS type
+```
+Resources
+| where type =~ 'Microsoft.Compute/virtualMachines'
+| summarize count() by tostring(properties.storageProfile.osDisk.osType)
+```
