@@ -15,8 +15,13 @@ Resources
 | project-away vmId
 ```
 
+## List of Virtual Machine and Current State
 ```
-
+Resources 
+| where type == "microsoft.compute/virtualmachines" 
+| extend vmState = tostring(properties.extended.instanceView.powerState.displayStatus) 
+| extend vmState = iif(isempty(vmState), "VM State Unknown", (vmState)) 
+| summarize count() by vmState
 ```
 
 ```
