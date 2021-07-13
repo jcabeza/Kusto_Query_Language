@@ -25,5 +25,7 @@ Resources
 ```
 
 ```
-
+Resources
+| where type == 'microsoft.compute/virtualmachines'
+| summarize count() by tostring(properties.extended.instanceView.powerState.code)
 ```
