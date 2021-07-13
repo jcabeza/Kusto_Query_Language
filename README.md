@@ -18,7 +18,7 @@ https://web.kusto.windows.net/
 ## KQL Queries
 
 *link to queries*
-[Queries](.queries)
+[Queries](queries)
 
 ## KQL Resource Graph Queries
 
