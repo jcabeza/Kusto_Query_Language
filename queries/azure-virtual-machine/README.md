@@ -7,8 +7,12 @@ Resources
 | project-away tenantId, kind, managedBy, sku, plan, tags, identity, zones, extendedLocation
 ```
 
+## List of Virtual Machine and Size
 ```
-
+Resources
+| where type =~ 'Microsoft.Compute/virtualMachines'
+| project vmName = name, vmSize=tostring(properties.hardwareProfile.vmSize), vmId = id
+| project-away vmId
 ```
 
 ```
