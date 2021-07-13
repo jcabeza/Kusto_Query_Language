@@ -20,6 +20,6 @@ https://web.kusto.windows.net/
 *link to queries*
 [Queries](queries)
 
-## KQL Resource Graph Queries
+## Resource Graph Queries
 
 https://docs.microsoft.com/en-us/azure/governance/resource-graph/samples/samples-by-category?tabs=azure-cli
