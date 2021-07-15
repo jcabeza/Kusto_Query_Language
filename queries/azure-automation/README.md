@@ -1,6 +1,18 @@
 # KQL Queries for Azure Automation
 
-## List of Automation
+## Count of Automation
+```
+resources
+| where type has 'microsoft.automation'
+| extend type = case(
+           type =~ 'microsoft.automation/automationaccounts', 'Automation Accounts',
+           type =~ 'microsoft.automation/automationaccounts/runbooks', 'Automation Runbooks',
+           type =~ 'microsoft.automation/automationaccounts/configurations', 'Automation Configurations',
+           strcat("Not Translated: ", type))
+| summarize count() by type
+```
+
+## List of Automation, Runbook Type and State
 ```
 resources
 | where type has 'microsoft.automation'
@@ -32,10 +44,5 @@ resources
            type =~ 'Automation Configurations', properties.lastModifiedTime,
            ' ')
 | extend Details = pack_all()
-| project Resource=id, subscriptionId, type, resourceGroup, RunbookType, LogicAppTrigger, State, Details
-| 
-```
-
-```
-
+| project subscriptionId, type, resourceGroup, RunbookType, State, Details
 ```
