@@ -36,3 +36,35 @@ Resources
 | where type =~ 'Microsoft.Compute/virtualMachines'
 | summarize count() by tostring(properties.storageProfile.osDisk.osType)
 ```
+
+## Count Virtual Machines by Size
+```
+Resources
+| where type == "microsoft.compute/virtualmachines"
+| summarize Count=count(properties.hardwareProfile.vmSize) by vmSize=tostring(properties.hardwareProfile.vmSize)
+```
+
+## Count Disk Size and Total GB
+```
+Resources
+| where type contains "microsoft.compute/disks"
+| summarize DiskSizeGB=sum(toint(properties.diskSizeGB))
+```
+
+## List Disk Size and Sku by Location
+```
+Resources
+| where type contains "microsoft.compute/disks"
+| summarize DiskSizeGB=sum(toint(properties.diskSizeGB)) by DiskSku=tostring(sku.name), location
+```
+
+## Count of Virtual Machine by Size and Location
+```
+Resources
+| where type == "microsoft.compute/virtualmachines"
+| summarize Count=count(properties.hardwareProfile.vmSize) by OS=tostring(properties.storageProfile.osDisk.osType), location, vmSize=tostring(properties.hardwareProfile.vmSize)
+```
+
+## Count of VMs by Size and Location
+```
+```
