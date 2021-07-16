@@ -38,3 +38,11 @@ resources
 | extend IpConfig = properties.ipConfiguration.id 
 | where isempty(IpConfig)
 ```
+
+## Find Orphaned Availability Sets
+```
+resources
+| where type =~ 'microsoft.compute/availabilitysets'
+| extend VirtualMachines = array_length(properties.virtualMachines)
+| where VirtualMachines == 0
+```
