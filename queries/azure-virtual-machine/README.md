@@ -44,7 +44,7 @@ Resources
 | summarize Count=count(properties.hardwareProfile.vmSize) by vmSize=tostring(properties.hardwareProfile.vmSize)
 ```
 
-## Count Disk Size and Total GB
+## Count Total Disk Size (GB)
 ```
 Resources
 | where type contains "microsoft.compute/disks"
@@ -65,6 +65,56 @@ Resources
 | summarize Count=count(properties.hardwareProfile.vmSize) by OS=tostring(properties.storageProfile.osDisk.osType), location, vmSize=tostring(properties.hardwareProfile.vmSize)
 ```
 
-## Count of VMs by Size and Location
+## List Virtual Machine NICs and Public IPs
 ```
+Resources
+| where type =~ 'microsoft.compute/virtualmachines'
+| extend nics=array_length(properties.networkProfile.networkInterfaces)
+| mv-expand nic=properties.networkProfile.networkInterfaces
+| where nics == 1 or nic.properties.primary =~ 'true' or isempty(nic)
+| project vmId = id, vmName = name, vmSize=tostring(properties.hardwareProfile.vmSize), nicId = tostring(nic.id)
+  | join kind=leftouter (
+    Resources
+    | where type =~ 'microsoft.network/networkinterfaces'
+    | extend ipConfigsCount=array_length(properties.ipConfigurations)
+    | mv-expand ipconfig=properties.ipConfigurations
+    | where ipConfigsCount == 1 or ipconfig.properties.primary =~ 'true'
+    | project nicId = id, privateIP= tostring(ipconfig.properties.privateIPAddress), publicIpId = tostring(ipconfig.properties.publicIPAddress.id), subscriptionId) on nicId
+| project-away nicId1
+| summarize by vmId, vmSize, nicId, privateIP, publicIpId, subscriptionId
+  | join kind=leftouter (
+    Resources
+      | where type =~ 'microsoft.network/publicipaddresses'
+        | project publicIpId = id, publicIpAddress = tostring(properties.ipAddress)) on publicIpId
+| project-away publicIpId1
+| sort by publicIpAddress desc
+```
+
+## List Virtual Machine with Storage Profile
+```
+Resources
+| where type contains "microsoft.compute/disks"
+| project Os=properties.osType,DiskSku=sku.name,DiskSizeGB=properties.diskSizeGB,id = managedBy
+| join (Resources 
+| where type == "microsoft.compute/virtualmachines") on id
+```
+```
+Resources
+| where type == "microsoft.compute/virtualmachines"
+| extend osDiskId= tostring(properties.storageProfile.osDisk.managedDisk.id)
+    | join kind=leftouter(
+        resources
+            | where type =~ 'microsoft.compute/disks'
+            | where properties !has 'Unattached'
+            | where properties has 'osType'
+            | project OS = tostring(properties.osType), osSku = tostring(sku.name), osDiskSizeGB = toint(properties.diskSizeGB), osDiskId=tostring(id)) on osDiskId
+    | join kind=leftouter(
+        resources
+			| where type =~ 'microsoft.compute/disks'
+            | where properties !has "osType"
+            | where properties !has 'Unattached'
+            | project sku = tostring(sku.name), diskSizeGB = toint(properties.diskSizeGB), id = managedBy
+            | summarize sum(diskSizeGB), count(sku) by id, sku) on id
+| project vmId=id, OS, location, resourceGroup, subscriptionId, osDiskId, osSku, osDiskSizeGB, DataDisksGB=sum_diskSizeGB, diskSkuCount=count_sku
+| sort by diskSkuCount desc
 ```
