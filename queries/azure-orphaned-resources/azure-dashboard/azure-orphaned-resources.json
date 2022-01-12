@@ -1,1 +1,509 @@
-#
+{
+  "properties": {
+    "lenses": {
+      "0": {
+        "order": 0,
+        "parts": {
+          "0": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "colSpan": 20,
+              "rowSpan": 2
+            },
+            "metadata": {
+              "inputs": [],
+              "type": "Extension/HubsExtension/PartType/MarkdownPart",
+              "settings": {
+                "content": {
+                  "settings": {
+                    "content": "<div style='line-height:80px;'>\n<span style='font-size:16px;font-weight:bold'>Azure Orphaned Resources Inventory</span>\n<span>This dashboard allows to visualize the unattached and unused resources.</span>\n</div>",
+                    "subtitle": "Azure Orphaned Resources",
+                    "title": "Orphaned Resources"
+                  }
+                }
+              }
+            }
+          },
+          "1": {
+            "position": {
+              "x": 0,
+              "y": 2,
+              "colSpan": 6,
+              "rowSpan": 6
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "chartType",
+                  "value": 2,
+                  "isOptional": true
+                },
+                {
+                  "name": "isShared",
+                  "isOptional": true
+                },
+                {
+                  "name": "queryId",
+                  "isOptional": true
+                },
+                {
+                  "name": "formatResults",
+                  "isOptional": true
+                },
+                {
+                  "name": "partTitle",
+                  "value": "Disk (Count)",
+                  "isOptional": true
+                },
+                {
+                  "name": "query",
+                  "value": "where type == \"microsoft.compute/disks\"\n| summarize DiskCount=count() by State=tostring(properties.diskState)\n| order by DiskCount desc\n| extend [\"Count (Disks)\"]=DiskCount\n| project State, [\"Count (Disks)\"]",
+                  "isOptional": true
+                },
+                {
+                  "name": "formatResults",
+                  "value": true,
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/ArgQueryChartTile",
+              "settings": {}
+            }
+          },
+          "2": {
+            "position": {
+              "x": 6,
+              "y": 2,
+              "colSpan": 14,
+              "rowSpan": 6
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "chartType",
+                  "isOptional": true
+                },
+                {
+                  "name": "isShared",
+                  "isOptional": true
+                },
+                {
+                  "name": "queryId",
+                  "isOptional": true
+                },
+                {
+                  "name": "formatResults",
+                  "isOptional": true
+                },
+                {
+                  "name": "partTitle",
+                  "value": "Orphaned Disk (Unattached)",
+                  "isOptional": true
+                },
+                {
+                  "name": "query",
+                  "value": "Resources\n| where type has 'microsoft.compute/disks'\n| extend diskState = tostring(properties.diskState)\n| where managedBy == '' or diskState == 'Unattached' \n| project id, diskState, resourceGroup, location, subscriptionId",
+                  "isOptional": true
+                },
+                {
+                  "name": "formatResults",
+                  "value": true,
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/ArgQueryGridTile",
+              "settings": {}
+            }
+          },
+          "3": {
+            "position": {
+              "x": 0,
+              "y": 8,
+              "colSpan": 6,
+              "rowSpan": 6
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "isShared",
+                  "isOptional": true
+                },
+                {
+                  "name": "queryId",
+                  "isOptional": true
+                },
+                {
+                  "name": "formatResults",
+                  "isOptional": true
+                },
+                {
+                  "name": "partTitle",
+                  "value": "Orphaned Network NIC (Count)",
+                  "isOptional": true
+                },
+                {
+                  "name": "query",
+                  "value": "Resources\r\n| where type has 'microsoft.network/networkinterfaces' \r\n| where '{nicWithPrivateEndpoints}' !has id \r\n| where properties !has 'virtualmachine' \r\n| summarize count() by type",
+                  "isOptional": true
+                },
+                {
+                  "name": "chartType",
+                  "value": 2,
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/ArgQueryChartTile",
+              "settings": {}
+            }
+          },
+          "4": {
+            "position": {
+              "x": 6,
+              "y": 8,
+              "colSpan": 14,
+              "rowSpan": 6
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "isShared",
+                  "isOptional": true
+                },
+                {
+                  "name": "queryId",
+                  "isOptional": true
+                },
+                {
+                  "name": "formatResults",
+                  "isOptional": true
+                },
+                {
+                  "name": "partTitle",
+                  "value": "Orphaned Network NIC",
+                  "isOptional": true
+                },
+                {
+                  "name": "formatResults",
+                  "value": true,
+                  "isOptional": true
+                },
+                {
+                  "name": "query",
+                  "value": "Resources\n| where type has 'microsoft.network/networkinterfaces' \n| where '{nicWithPrivateEndpoints}' !has id \n| where properties !has 'virtualmachine'\n| where name !has 'pe' and name !has 'pvendpt' and name !has '.nic.' \n| project id, resourceGroup, location, subscriptionId",
+                  "isOptional": true
+                },
+                {
+                  "name": "chartType",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/ArgQueryGridTile",
+              "settings": {}
+            }
+          },
+          "5": {
+            "position": {
+              "x": 0,
+              "y": 14,
+              "colSpan": 6,
+              "rowSpan": 6
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "partTitle",
+                  "value": "Orphaned Public IP (Count)",
+                  "isOptional": true
+                },
+                {
+                  "name": "query",
+                  "value": "resources \n| where type =~ 'microsoft.network/publicipaddresses' \n| extend IpConfig = properties.ipConfiguration.id \n| where isempty(IpConfig)\n| summarize count() by type",
+                  "isOptional": true
+                },
+                {
+                  "name": "chartType",
+                  "value": 2,
+                  "isOptional": true
+                },
+                {
+                  "name": "isShared",
+                  "isOptional": true
+                },
+                {
+                  "name": "queryId",
+                  "value": "",
+                  "isOptional": true
+                },
+                {
+                  "name": "formatResults",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/ArgQueryChartTile",
+              "settings": {}
+            }
+          },
+          "6": {
+            "position": {
+              "x": 6,
+              "y": 14,
+              "colSpan": 14,
+              "rowSpan": 6
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "chartType",
+                  "isOptional": true
+                },
+                {
+                  "name": "isShared",
+                  "isOptional": true
+                },
+                {
+                  "name": "queryId",
+                  "isOptional": true
+                },
+                {
+                  "name": "formatResults",
+                  "isOptional": true
+                },
+                {
+                  "name": "partTitle",
+                  "value": "Orphaned Public IP",
+                  "isOptional": true
+                },
+                {
+                  "name": "query",
+                  "value": "resources \n| where type =~ 'microsoft.network/publicipaddresses' \n| extend IpConfig = properties.ipConfiguration.id \n| where isempty(IpConfig)",
+                  "isOptional": true
+                },
+                {
+                  "name": "formatResults",
+                  "value": true,
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/ArgQueryGridTile",
+              "settings": {}
+            }
+          },
+          "7": {
+            "position": {
+              "x": 0,
+              "y": 20,
+              "colSpan": 6,
+              "rowSpan": 6
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "isShared",
+                  "isOptional": true
+                },
+                {
+                  "name": "queryId",
+                  "isOptional": true
+                },
+                {
+                  "name": "formatResults",
+                  "isOptional": true
+                },
+                {
+                  "name": "partTitle",
+                  "value": "Orphaned Network Security Group (Count)",
+                  "isOptional": true
+                },
+                {
+                  "name": "query",
+                  "value": "Resources\n| where type =~ 'microsoft.network/networksecuritygroups' and isnull(properties.networkInterfaces) and isnull(properties.subnets)\n| summarize count() by type\n//| project Resource=id, resourceGroup, subscriptionId, location",
+                  "isOptional": true
+                },
+                {
+                  "name": "chartType",
+                  "value": 2,
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/ArgQueryChartTile",
+              "settings": {}
+            }
+          },
+          "8": {
+            "position": {
+              "x": 6,
+              "y": 20,
+              "colSpan": 14,
+              "rowSpan": 6
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "chartType",
+                  "isOptional": true
+                },
+                {
+                  "name": "isShared",
+                  "isOptional": true
+                },
+                {
+                  "name": "queryId",
+                  "isOptional": true
+                },
+                {
+                  "name": "partTitle",
+                  "value": "Orphaned Network Security Group (0 subnets, 0 network interfaces)",
+                  "isOptional": true
+                },
+                {
+                  "name": "query",
+                  "value": "Resources\n| where type =~ 'microsoft.network/networksecuritygroups' and isnull(properties.networkInterfaces) and isnull(properties.subnets)\n| project Resource=id, resourceGroup, subscriptionId, location",
+                  "isOptional": true
+                },
+                {
+                  "name": "formatResults",
+                  "value": true,
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/ArgQueryGridTile",
+              "settings": {}
+            }
+          },
+          "9": {
+            "position": {
+              "x": 0,
+              "y": 26,
+              "colSpan": 6,
+              "rowSpan": 6
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "partTitle",
+                  "value": "Virtual Machines Deallocated (Count)",
+                  "isOptional": true
+                },
+                {
+                  "name": "query",
+                  "value": "Resources\n| where type == 'microsoft.compute/virtualmachines'\n| summarize count() by tostring(properties.extended.instanceView.powerState.code)",
+                  "isOptional": true
+                },
+                {
+                  "name": "chartType",
+                  "value": 2,
+                  "isOptional": true
+                },
+                {
+                  "name": "isShared",
+                  "isOptional": true
+                },
+                {
+                  "name": "formatResults",
+                  "isOptional": true
+                },
+                {
+                  "name": "queryId",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/ArgQueryChartTile",
+              "settings": {}
+            }
+          },
+          "10": {
+            "position": {
+              "x": 6,
+              "y": 26,
+              "colSpan": 14,
+              "rowSpan": 6
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "chartType",
+                  "isOptional": true
+                },
+                {
+                  "name": "isShared",
+                  "isOptional": true
+                },
+                {
+                  "name": "queryId",
+                  "isOptional": true
+                },
+                {
+                  "name": "partTitle",
+                  "value": "Virtual Machines Deallocated",
+                  "isOptional": true
+                },
+                {
+                  "name": "formatResults",
+                  "value": true,
+                  "isOptional": true
+                },
+                {
+                  "name": "query",
+                  "value": "Resources\n| project name, location, resourceGroup, subscriptionId, \n   PowerState=tostring(properties.extended.instanceView.powerState.code), type\n| where type =~ 'Microsoft.Compute/virtualMachines'\n| where PowerState == \"PowerState/deallocated\"\n| order by name desc",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/ArgQueryGridTile",
+              "settings": {}
+            }
+          }
+        }
+      }
+    },
+    "metadata": {
+      "model": {
+        "timeRange": {
+          "value": {
+            "relative": {
+              "duration": 24,
+              "timeUnit": 1
+            }
+          },
+          "type": "MsPortalFx.Composition.Configuration.ValueTypes.TimeRange"
+        },
+        "filterLocale": {
+          "value": "en-us"
+        },
+        "filters": {
+          "value": {
+            "MsPortalFx_Subscription": {
+              "model": {
+                "operator": "equals",
+                "selectAllState": "all"
+              },
+              "displayCache": {
+                "name": "Subscription",
+                "value": "all"
+              },
+              "filteredPartIds": [
+                "StartboardPart-ArgQueryChartTile-830f42ec-6ee6-40d4-b076-5695463cf1fe",
+                "StartboardPart-ArgQueryGridTile-830f42ec-6ee6-40d4-b076-5695463cf200",
+                "StartboardPart-ArgQueryChartTile-830f42ec-6ee6-40d4-b076-5695463cf202",
+                "StartboardPart-ArgQueryGridTile-830f42ec-6ee6-40d4-b076-5695463cf204",
+                "StartboardPart-ArgQueryChartTile-830f42ec-6ee6-40d4-b076-5695463cf206",
+                "StartboardPart-ArgQueryGridTile-830f42ec-6ee6-40d4-b076-5695463cf208",
+                "StartboardPart-ArgQueryChartTile-830f42ec-6ee6-40d4-b076-5695463cf20a",
+                "StartboardPart-ArgQueryGridTile-830f42ec-6ee6-40d4-b076-5695463cf20c",
+                "StartboardPart-ArgQueryChartTile-830f42ec-6ee6-40d4-b076-5695463cf20e",
+                "StartboardPart-ArgQueryGridTile-830f42ec-6ee6-40d4-b076-5695463cf210"
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "name": "azure-orphaned-resources",
+  "type": "Microsoft.Portal/dashboards",
+  "location": "INSERT LOCATION",
+  "tags": {
+    "hidden-title": "azure-orphaned-resources"
+  },
+  "apiVersion": "2015-08-01-preview"
+}
