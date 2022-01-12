@@ -62,6 +62,6 @@ Resources
 
 ## Dashboard
 
-You will find in this repo [](./azure-dashboard/azure-orphaned-resources.json) a **.json** file for creating an Azure dashboard that looks like :
+You will find in this [repo](./azure-dashboard/azure-orphaned-resources.json) a **.json** file for creating an Azure dashboard that looks like :
 
 ![](./azure-dashboard/azure-orphaned-resources.png)
