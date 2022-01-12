@@ -59,3 +59,9 @@ Resources
 | where PowerState == "PowerState/deallocated"
 | order by name desc
 ```
+
+## Dashboard
+
+You will find a .json file for creating an Azure dashboard that looks like :
+
+![](./)
