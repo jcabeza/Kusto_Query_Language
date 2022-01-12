@@ -23,6 +23,10 @@ Resources
 | where properties !has 'virtualmachine'
 | project id, resourceGroup, location, subscriptionId
 ```
+To exclude private endpoints added : 
+```
+| where name !has '.nic' and name !has 'pvendpt_name_according_to_the_name_of_the_resource' 
+```
 
 ## Find Orphaned NSG (no nic or subnet)
 ```
@@ -45,4 +49,13 @@ resources
 | where type =~ 'microsoft.compute/availabilitysets'
 | extend VirtualMachines = array_length(properties.virtualMachines)
 | where VirtualMachines == 0
+```
+
+## Find Deallocated Virtual Machines
+```
+Resources
+| project name, location, resourceGroup, subscriptionId, PowerState=tostring(properties.extended.instanceView.powerState.code), type
+| where type =~ 'Microsoft.Compute/virtualMachines'
+| where PowerState == "PowerState/deallocated"
+| order by name desc
 ```
