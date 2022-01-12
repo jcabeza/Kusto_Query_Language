@@ -60,7 +60,7 @@ Resources
 | order by name desc
 ```
 
-## Dashboard
+## Azure Dashboard
 
 You will find in this [repo](./azure-dashboard/azure-orphaned-resources.json) a **.json** file for creating an Azure dashboard that looks like :
 
