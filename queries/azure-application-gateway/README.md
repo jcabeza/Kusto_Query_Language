@@ -9,6 +9,13 @@ AzureDiagnostics
 | where Category == "ApplicationGatewayFirewallLog" 
 | where action_s == "Blocked" | order by TimeGenerated
 ```
+```
+AzureDiagnostics 
+| where TimeGenerated > ago(7d)
+| where Category == "ApplicationGatewayFirewallLog" 
+| where action_s == "Blocked" | order by TimeGenerated
+| project Category, Resource, requestUri_s, Message, clientIp_s, action_s, details_message_s, details_file_s, hostname_s, policyScopeName_s
+```
 ### View the Raw data in the firewall log
 ```
 AzureDiagnostics 
