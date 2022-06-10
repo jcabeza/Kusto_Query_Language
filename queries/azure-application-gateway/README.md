@@ -1,0 +1,41 @@
+# KQL Queries for Azure Application Gateway
+
+## View the raw data in the firewall (WAF) log
+```
+AzureDiagnostics 
+| where ResourceProvider == "MICROSOFT.NETWORK" and Category == "ApplicationGatewayFirewallLog"
+```
+## Matched/Blocked requests by IP
+```
+AzureDiagnostics
+| where ResourceProvider == "MICROSOFT.NETWORK" and Category == "ApplicationGatewayFirewallLog"
+| summarize count() by clientIp_s, bin(TimeGenerated, 1m)
+| render timechart
+```
+## Matched/Blocked requests by URI
+```
+AzureDiagnostics
+| where ResourceProvider == "MICROSOFT.NETWORK" and Category == "ApplicationGatewayFirewallLog"
+| summarize count() by requestUri_s, bin(TimeGenerated, 1m)
+| render timechart
+```
+## Top matched rules
+```
+AzureDiagnostics
+| where ResourceProvider == "MICROSOFT.NETWORK" and Category == "ApplicationGatewayFirewallLog"
+| summarize count() by ruleId_s, bin(TimeGenerated, 1m)
+| where count_ > 10
+| render timechart
+```
+## Top five matched rule groups
+```
+AzureDiagnostics
+| where ResourceProvider == "MICROSOFT.NETWORK" and Category == "ApplicationGatewayFirewallLog"
+| summarize Count=count() by details_file_s, action_s
+| top 5 by Count desc
+| render piechart
+```
+
+### Links
+
+https://docs.microsoft.com/en-us/azure/application-gateway/log-analytics
