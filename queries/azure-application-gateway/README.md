@@ -52,6 +52,31 @@ AzureDiagnostics
 | render piechart
 ```
 
+## Access Log
+
+### Access view to specific host
+```
+AzureDiagnostics
+| where Category == "ApplicationGatewayAccessLog"
+| sort by TimeGenerated
+| where host_s == "my.domain.com"
+| project Resource, requestUri_s, instanceId_s, host_s , clientIP_s, receivedBytes_d, sentBytes_d, timeTaken_d, serverRouted_s, serverResponseLatency_s, originalHost_s
+```
+### Search for a dedicated status code on a dedicated host
+```
+AzureDiagnostics
+| where Category == "ApplicationGatewayAccessLog"
+| where host_s == "my.domain.com"
+| where httpStatus_d == "404"
+| sort by TimeGenerated
+```
+### Get HTTP status codes for a dedicated host
+```
+AzureDiagnostics
+| where Category == "ApplicationGatewayAccessLog"
+| where host_s == "my.domain.com"
+| summarize count() by httpStatus_d
+```
 ## Links
 
 https://docs.microsoft.com/en-us/azure/application-gateway/log-analytics
