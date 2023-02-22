@@ -7,7 +7,8 @@
 AzureDiagnostics 
 | where TimeGenerated > ago(7d)
 | where Category == "ApplicationGatewayFirewallLog" 
-| where action_s == "Blocked" | order by TimeGenerated
+| where action_s == "Blocked" 
+| order by TimeGenerated
 ```
 ```
 AzureDiagnostics 

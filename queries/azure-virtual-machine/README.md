@@ -1,5 +1,13 @@
 # KQL Queries for Azure Virtual Machines
 
+## List of Virtual Machines Time Creation
+```
+Resources 
+| where type == "microsoft.compute/virtualmachines"
+| extend props=parse_json(properties)
+| project name, resourceGroup, time_created=props["timeCreated"]
+```
+
 ## List of Virtual Machines
 ```
 Resources
@@ -65,7 +73,7 @@ Resources
 | summarize Count=count(properties.hardwareProfile.vmSize) by OS=tostring(properties.storageProfile.osDisk.osType), location, vmSize=tostring(properties.hardwareProfile.vmSize)
 ```
 
-## List Virtual Machine NICs and Public IPs
+## List of Virtual Machine NICs and Public IPs
 ```
 Resources
 | where type =~ 'microsoft.compute/virtualmachines'
@@ -90,7 +98,7 @@ Resources
 | sort by publicIpAddress desc
 ```
 
-## List Virtual Machine with Storage Profile
+## List of Virtual Machine with Storage Profile
 ```
 Resources
 | where type contains "microsoft.compute/disks"
@@ -117,4 +125,13 @@ Resources
             | summarize sum(diskSizeGB), count(sku) by id, sku) on id
 | project vmId=id, OS, location, resourceGroup, subscriptionId, osDiskId, osSku, osDiskSizeGB, DataDisksGB=sum_diskSizeGB, diskSkuCount=count_sku
 | sort by diskSkuCount desc
+```
+
+## List of Virtual Machines Deallocated
+```
+Resources
+| project name, location, PowerState=tostring(properties.extended.instanceView.powerState.code), type
+| where type =~ 'Microsoft.Compute/virtualMachines'
+| where PowerState == "PowerState/deallocated"
+| order by name desc
 ```

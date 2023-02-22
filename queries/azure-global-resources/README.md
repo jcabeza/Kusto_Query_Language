@@ -7,6 +7,14 @@ Resources
 | order by count_
 ```
 
+```
+// top ten resource types by number of resources
+summarize ResourceCount=count() by type
+| order by ResourceCount desc
+| take 10
+| project ["Resource Type"]=type, ["Resource Count"]=ResourceCount
+```
+
 ## Query and Count Resources Group Missing Tag
 ```
 resourcecontainers
