@@ -25,7 +25,7 @@ AzureDiagnostics
 | where msg_s has_any ('Deny','UDP','53')
 ```
 
-# Query for search in a range time
+## Query for search in a range time
 ```
 AzureDiagnostics
 | where TimeGenerated between(datetime("2022-01-05 00:00:00") .. datetime("2022-01-08 12:00:00"))
