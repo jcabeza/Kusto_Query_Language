@@ -7,7 +7,7 @@ Resources
 | project-away tenantId, managedBy, sku, identity, plan, zones, tags, properties, extendedLocation
 ```
 
-## Search for a storage account by name
+## Search for a Storage Account by name
 ```
 resources
 | where type == "microsoft.storage/storageaccounts"
